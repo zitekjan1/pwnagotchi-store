@@ -16,8 +16,8 @@ import shutil
 import re
 
 # --- CONFIGURATION ---
-# UPDATE THIS WITH YOUR GITEA IP AND PORT
-REGISTRY_URL = "http://192.168.1.4:3001/wpa2/pwnagotchi-store/raw/branch/main/plugins.json"
+# UPDATE THIS WITH YOUR GITHUB RAW URL BEFORE PUSHING
+REGISTRY_URL = "https://raw.githubusercontent.com/YOUR_GITHUB_USER/pwnagotchi-store/main/plugins.json"
 
 CUSTOM_PLUGIN_DIR = "/usr/local/share/pwnagotchi/custom-plugins/"
 CONFIG_FILE = "/etc/pwnagotchi/config.toml"
@@ -36,7 +36,7 @@ def banner():
     print(r" | |_) \ \ /\ / / '_ \ (___| |_ ___  _ __ ___  ")
     print(r" |  __/ \ V  V /| | | \___ \ __/ _ \| '__/ _ \ ")
     print(r" | |     \_/\_/ |_| |_|____/ || (_) | | |  __/ ")
-    print(r" |_|   v1.2 by WPA2     \_____/\__\___/|_|  \___| ")
+    print(r" |_|   v1.3 by WPA2     \_____/\__\___/|_|  \___| ")
     print(f"{RESET}")
     print(f"  Support the dev: {GREEN}https://buymeacoffee.com/wpa2{RESET}\n")
 
@@ -47,13 +47,18 @@ def get_installed_plugins():
 
 def fetch_registry():
     try:
-        r = requests.get(REGISTRY_URL)
+        r = requests.get(REGISTRY_URL, timeout=10)
         if r.status_code != 200:
             print(f"{RED}[!] Could not connect to store (Status: {r.status_code}){RESET}")
             sys.exit(1)
         return r.json()
+    except requests.exceptions.ConnectionError:
+        print(f"{RED}[!] No Internet Connection Detected.{RESET}")
+        print(f"    Please connect your Pwnagotchi to the internet.")
+        print(f"    {YELLOW}Guide: https://github.com/jayofelony/pwnagotchi/wiki/Step-2-Connecting{RESET}")
+        sys.exit(1)
     except Exception as e:
-        print(f"{RED}[!] Connection failed.{RESET}")
+        print(f"{RED}[!] Connection failed: {e}{RESET}")
         sys.exit(1)
 
 def list_plugins(args):
@@ -96,7 +101,6 @@ def scan_for_config_params(file_path):
     try:
         with open(file_path, 'r', errors='ignore') as f:
             content = f.read()
-            # Regex: finds self.options followed by ['key'] or .get('key')
             matches = re.findall(r"self\.options(?:\[|\.get\()\s*['\"]([^'\"]+)['\"]", content)
             params = list(set(matches)) 
     except:
@@ -124,7 +128,6 @@ def install_plugin(args):
     final_file_path = os.path.join(CUSTOM_PLUGIN_DIR, f"{target_name}.py")
 
     try:
-        # DOWNLOAD LOGIC
         if plugin_data.get('origin_type') == 'zip':
             print(f"[*] Downloading repository archive...")
             r = requests.get(plugin_data['download_url'])
@@ -144,11 +147,8 @@ def install_plugin(args):
                 f.write(r.content)
 
         print(f"{GREEN}[+] Successfully installed to {final_file_path}{RESET}")
-        
-        # AUTO-ENABLE
         update_config(target_name, enable=True)
 
-        # SMART HINTS
         params = scan_for_config_params(final_file_path)
         if params:
             print(f"\n{YELLOW}[!] CONFIGURATION REQUIRED:{RESET}")
@@ -177,7 +177,6 @@ def uninstall_plugin(args):
         print(f"{RED}[!] Error removing file: {e}{RESET}")
 
 def update_config(plugin_name, enable=True):
-    """Toggles enabled flag in config.toml"""
     try:
         with open(CONFIG_FILE, "r") as f:
             lines = f.readlines()
@@ -189,7 +188,6 @@ def update_config(plugin_name, enable=True):
         for line in lines:
             if config_key in line:
                 found = True
-                # Update the existing line
                 new_lines.append(f"{config_key} = {'true' if enable else 'false'}\n")
             else:
                 new_lines.append(line)
@@ -211,21 +209,17 @@ def main():
     parser = argparse.ArgumentParser(description="Pwnagotchi Plugin Manager")
     subparsers = parser.add_subparsers()
 
-    # LIST
     parser_list = subparsers.add_parser('list', help='List all available plugins')
     parser_list.set_defaults(func=list_plugins)
 
-    # INFO
     parser_info = subparsers.add_parser('info', help='Show details about a plugin')
     parser_info.add_argument('name', type=str, help='Name of the plugin')
     parser_info.set_defaults(func=show_info)
 
-    # INSTALL
     parser_install = subparsers.add_parser('install', help='Install a plugin')
     parser_install.add_argument('name', type=str, help='Name of the plugin')
     parser_install.set_defaults(func=install_plugin)
 
-    # UNINSTALL
     parser_uninstall = subparsers.add_parser('uninstall', help='Uninstall a plugin')
     parser_uninstall.add_argument('name', type=str, help='Name of the plugin')
     parser_uninstall.set_defaults(func=uninstall_plugin)
