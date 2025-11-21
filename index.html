@@ -100,10 +100,10 @@
         .card h2 { 
             margin: 0; font-size: 1.4rem; color: var(--accent); font-family: var(--font-pixel);
             font-weight: 400; letter-spacing: 1px; white-space: nowrap; overflow: hidden; 
-            text-overflow: ellipsis; padding-right: 50px; /* Space for Repo Button */
+            text-overflow: ellipsis; padding-right: 50px; /* Space for absolute Repo link */
         }
         
-        /* ABSOLUTE POSITION REPO BUTTON */
+        /* Repo Link (Absolute Top Right) */
         .repo-link {
             position: absolute; top: 25px; right: 25px;
             font-family: var(--font-pixel); font-size: 1rem; color: #555; border: 1px solid #333;
@@ -122,7 +122,7 @@
             font-size: 0.9rem; color: #bbb; line-height: 1.5; overflow: hidden; height: 4.5em; 
             display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
         }
-        /* Capitalize first letter */
+        /* Capitalize first letter of description */
         .desc::first-letter { text-transform: uppercase; }
 
         /* Install Overlay */
@@ -214,9 +214,15 @@
             const grid = document.getElementById('plugin-grid');
             grid.innerHTML = "";
             list.forEach(p => {
-                let cleanAuthor = p.author.replace(/<[^>]*>/g, "").trim().replace(/[\w\.-]+@[\w\.-]+/g, "").trim().replace(/^[0-9]+\+/, "").trim();
+                let cleanAuthor = p.author;
+                // Remove email brackets <...>
+                cleanAuthor = cleanAuthor.replace(/<[^>]*>/g, "").trim();
+                // Remove GitHub prefix 1234+
+                cleanAuthor = cleanAuthor.replace(/^[0-9]+\+/, "").trim();
+                // (We do NOT remove @ anymore)
+
                 if(cleanAuthor.length > 20) cleanAuthor = cleanAuthor.substring(0, 18) + "...";
-                if(cleanAuthor.length === 0) cleanAuthor = "Unknown";
+                if(cleanAuthor.length === 0 || cleanAuthor === "Unknown") cleanAuthor = "Community";
 
                 let repoUrl = p.download_url;
                 if(repoUrl.includes('/archive/')) repoUrl = repoUrl.split('/archive/')[0];

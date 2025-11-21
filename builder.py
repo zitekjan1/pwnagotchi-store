@@ -9,39 +9,42 @@ import os
 INPUT_FILE = "repos.txt"
 OUTPUT_FILE = "plugins.json"
 
-# --- CATEGORY LOGIC (v3 - Smart Priority) ---
+# --- CATEGORY LOGIC (v4 - Final Priority) ---
 def detect_category(code, name):
-    """Scans code AND filename with stricter rules and better priority."""
+    """Scans code AND filename. Name matches take priority."""
     text = (code + " " + name).lower()
     name = name.lower()
     
-    # 1. SOCIAL
+    # --- PRIORITY 1: FILENAME CHECKS (These override everything) ---
+    if any(x in name for x in ['gps', 'geo', 'loc', 'map']): return "GPS"
+    if any(x in name for x in ['ups', 'batt', 'screen', 'display', 'ink', 'oled', 'led', 'light']): return "Hardware"
+    if any(x in name for x in ['discord', 'telegram', 'bot', 'chat', 'social']): return "Social"
+    if any(x in name for x in ['handshake', 'pwn', 'crack', 'attack', 'deauth']): return "Attack"
+    if any(x in name for x in ['backup', 'log', 'ssh', 'clean', 'sys']): return "System"
+
+    # --- PRIORITY 2: DEEP CODE SCAN (If filename was vague) ---
+    
+    # Social (Check content)
     if any(x in text for x in ['discord', 'telegram', 'twitter', 'mastodon', 'webhook', 'slack', 'pushover', 'ntfy']):
         return "Social"
 
-    # 2. GPS 
-    if any(x in name for x in ['gps', 'geo', 'loc', 'map']):
-        return "GPS"
+    # GPS (Check content)
     if any(x in text for x in ['gpsd', 'nmea', 'coordinates', 'latitude', 'longitude', 'geofence']):
         return "GPS"
 
-    # 3. ATTACK / WIFI
+    # Attack / WiFi
     if any(x in text for x in ['handshake', 'deauth', 'assoc', 'crack', 'brute', 'pmkid', 'pcap', 'wardriving', 'eapol']):
         return "Attack"
 
-    # 4. HARDWARE
-    if any(x in name for x in ['ups', 'battery', 'screen', 'display', 'ink', 'oled', 'bt', 'ble', 'led', 'light']):
-        return "Hardware"
+    # Hardware
     if any(x in text for x in ['gpio', 'i2c', 'spi', 'papirus', 'waveshare', 'inky', 'bluetooth', 'pisugar']):
         return "Hardware"
 
-    # 5. SYSTEM / UTILS
-    if any(x in name for x in ['backup', 'log', 'ssh', 'update', 'clean', 'clock', 'uptime']):
-        return "System"
+    # System
     if any(x in text for x in ['cpu_load', 'mem_usage', 'temperature', 'shutdown', 'reboot', 'internet', 'hotspot', 'wlan0']):
         return "System"
 
-    # 6. DISPLAY / UI
+    # Display
     if any(x in text for x in ['ui.set', 'ui.add', 'canvas', 'font', 'faces', 'render', 'layout', 'view']):
         return "Display"
     
@@ -50,7 +53,7 @@ def detect_category(code, name):
 # --- METADATA EXTRACTION ---
 def parse_python_content(code, filename, origin_url, internal_path=None):
     try:
-        # 1. Find Version and Author (Improved Regex to handle ' vs " and spacing)
+        # 1. Find Version and Author (Improved Regex)
         version_match = re.search(r"__version__\s*=\s*[\"'](.+?)[\"']", code)
         author_match = re.search(r"__author__\s*=\s*[\"'](.+?)[\"']", code)
         
