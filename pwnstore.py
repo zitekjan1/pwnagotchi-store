@@ -17,7 +17,7 @@ import re
 
 # --- CONFIGURATION ---
 # [IMPORTANT] ALWAYS KEEP THIS SET TO THE PUBLIC GITHUB URL
-DEFAULT_REGISTRY = "http://192.168.1.4:3001/wpa2/pwnagotchi-store/raw/branch/main/plugins.json"
+DEFAULT_REGISTRY = "https://raw.githubusercontent.com/wpa-2/pwnagotchi-store/main/plugins.json"
 
 CUSTOM_PLUGIN_DIR = "/usr/local/share/pwnagotchi/custom-plugins/"
 CONFIG_FILE = "/etc/pwnagotchi/config.toml"
@@ -36,7 +36,7 @@ def banner():
     print(r" | |_) \ \ /\ / / '_ \ (___| |_ ___  _ __ ___  ")
     print(r" |  __/ \ V  V /| | | \___ \ __/ _ \| '__/ _ \ ")
     print(r" | |     \_/\_/ |_| |_|____/ || (_) | | |  __/ ")
-    print(r" |_|   v2.1 (Deep Scan) \_____/\__\___/|_|  \___| ")
+    print(r" |_|   v2.2 (Smart Scan)\_____/\__\___/|_|  \___| ")
     print(f"{RESET}")
     print(f"  Support the dev: {GREEN}https://buymeacoffee.com/wpa2{RESET}\n")
 
@@ -183,29 +183,35 @@ def show_info(args):
     print("")
 
 def scan_for_config_params(file_path, plugin_name):
-    """Deep scans for .get() and ['key'] usage to find requirements."""
+    """Smartly scans for config usage while ignoring API/Data calls."""
     params = []
-    # Stop words to ignore
+    # System words to ignore
     ignore = ['main', 'plugins', 'enabled', 'name', 'whitelist', 'screen', 'display', 'none', 'false', 'true', plugin_name]
     
     try:
         with open(file_path, 'r', errors='ignore') as f:
-            content = f.read()
-            
-            # 1. Standard: self.options['key']
-            matches_std = re.findall(r"self\.options\s*\[\s*['\"]([^'\"]+)['\"]\s*\]", content)
-            
-            # 2. Loose: .get('key') - catches wiglelocator style
-            matches_get = re.findall(r"\.get\(\s*['\"]([^'\"]+)['\"]", content)
-            
-            all_matches = set(matches_std + matches_get)
-            
-            for m in all_matches:
-                if m not in ignore and len(m) > 2:
-                    params.append(m)
+            for line in f:
+                # Safety Filter: Ignore lines that are clearly API or Data calls
+                if any(bad in line for bad in ['requests.get', 'result.get', 'data.get', 'resp.get', 'json.get']):
+                    continue
+                
+                # 1. Standard: self.options['key']
+                matches = re.findall(r"self\.options\s*\[\s*['\"]([^'\"]+)['\"]\s*\]", line)
+                
+                # 2. Loose: .get('key') (Only if line contains config/options keywords)
+                # This helps catch: config.get('key') or self.options.get('key')
+                if 'config' in line or 'options' in line or 'kwargs' in line:
+                    matches += re.findall(r"\.get\(\s*['\"]([^'\"]+)['\"]", line)
+                
+                for m in matches:
+                    # Filter out URLs or paths
+                    if 'http' in m or '/' in m: continue
+                    
+                    if m not in ignore and len(m) > 2:
+                        params.append(m)
     except:
         pass
-    return sorted(params)
+    return sorted(list(set(params)))
 
 def update_self(args):
     check_sudo()
@@ -298,7 +304,7 @@ def install_plugin(args):
         print(f"{GREEN}[+] Successfully installed to {final_file_path}{RESET}")
         update_config(target_name, enable=True)
         
-        # Deep scan for config options
+        # Smart Config Scan
         params = scan_for_config_params(final_file_path, target_name)
         if params:
             print(f"\n{YELLOW}[!] CONFIGURATION REQUIRED:{RESET}")
@@ -323,7 +329,6 @@ def uninstall_plugin(args):
     except Exception as e: print(f"{RED}[!] Error: {e}{RESET}")
 
 def update_config(plugin_name, enable=True):
-    """Updates config.toml with a blank line for new entries."""
     try:
         with open(CONFIG_FILE, "r") as f: lines = f.readlines()
         new_lines = []
