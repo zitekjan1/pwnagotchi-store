@@ -431,7 +431,7 @@
   },
   {
     "name": "pwndroid",
-    "version": "1.1.003",
+    "version": "1.1.004",
     "description": "Plugin for the companion app PwnDroid to display GPS data on the Pwnagotchi screen.",
     "author": "Jayofelony",
     "category": "Display",
